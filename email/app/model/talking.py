@@ -1,7 +1,7 @@
-from webapp.talking.models import User, Conversation
+from webapp.talking.models import User, Conversation, Snip, Answer, Moderated
 from email.utils import parseaddr
 from lamson import queue
-from lamson.mail import MailRequest
+from lamson.mail import MailResponse
 from config.settings import relay
 
 
@@ -47,7 +47,7 @@ def get_snip(message, conv):
 
     snip = Snip(prompt=text, 
                 conversation=conv,
-                sequence=_get_snip_sequence())
+                sequence=_get_snip_sequence(conv))
     snip.save()
     return snip
 
@@ -82,7 +82,7 @@ def send(work, user):
 
 def get_answer_message(answer):
     
-    message = MailResponse(From="mr.quibbles-%s@quibbl.es" % answer.id, Subject="Mr. Quibbles wants to know...", Body=build_message_body(answer))
+    message = MailResponse(From="mr.quibbles-%s@quibbl.es" % answer.id, Subject="Mr. Quibbles wants to know...", Body=build_answer_message_body(answer))
 
     return message
 
