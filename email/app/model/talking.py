@@ -88,14 +88,11 @@ def get_answer_message(answer):
 
 def build_answer_message_body(answer):
     
-    snips = answer.snip.conversation.snip_set.all()
-    snips.order_by('-sequence')
+    snips = answer.snip.conversation.snip_set.order_by('-sequence').all()[1:]
     
-    message = answer.snip.prompt + ('\n'*2)
-    print(len(snips))
-    for index in range(1,len(snips)):
-        snip = snips[index]
-        message += DELIMITER + ('\n'*2) + snip.get_response() + ('\n'*2)
-        message += DELIMITER + ('\n'*2) + snip.prompt + ('\n'*2)
+    body = answer.snip.prompt + '\n\n'
+    for snip in snips:
+        body += DELIMITER + '\n\n' + snip.get_response() + '\n\n'
+        body += DELIMITER + '\n\n' + snip.prompt + '\n\n'
     
-    return message
+    return body
