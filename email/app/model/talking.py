@@ -142,9 +142,6 @@ def get_answer_message(answer):
     message = MailResponse(From="answer-%s@mr.quibbl.es" % answer.id, Subject="Mr. Quibbles wants your input", Body=build_answer_message_body(answer))
 
     return message
-
-def create_mod_request_email(snip):
-    message = MailResponse(From="mod-%s@mr.quibbl.es" % snip.id, Subject="Mr. Quibbles wants you your input...", Body=build_mod_request_message_body(snip))
     
 
 def build_mod_request_message_body(last_snip):
@@ -172,7 +169,7 @@ def build_mod_request_message_body(last_snip):
 
 def create_mod_email(snip):
 
-    message = MailResponse(From="mod-%s@mr.quibbl.es" % snip.id, Subject="Mr. Quibbles wants you to know.", Body=build_mod_message_body(snip))
+    message = MailResponse(From="mod-%s@mr.quibbl.es" % snip.id, Subject="Mr. Quibbles wants you to know.", Body=build_mod_request_message_body(snip))
     snip.complete = True
     
     return message
@@ -184,7 +181,7 @@ def build_response_message_body(last_snip):
     snips = [snip for snip in last_snip.conversation.snip_set.order_by('sequence').all()]
     
     body = DELIMITER + '\n\nMr. Quibbles: ' + snips[-1].get_response() + '\n\n'
-    body += build_previous_conversation(snips)
+    body += build_complete_conversation(snips)
     
     return body
 
@@ -202,18 +199,16 @@ def build_complete_conversation(snips):
 
 def build_answer_message_body(answer):
     
-    body = DELIMITER + """
+    body = DELIMITER + """\n\n
         Mr. Quibbles: I heard this through the grapevine -
             
             \"""" + last_snip.prompt + """\"
             
-        What's your response?
-        
-        """
+        What's your response?\n\n"""
     
     snips = [snip for snip in answer.snip.conversation.snip_set.order_by('sequence').all()]
     
-    body = build_complete_conversation(snips)
+    body += build_complete_conversation(snips)
     
     return body
 

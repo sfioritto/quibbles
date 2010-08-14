@@ -125,7 +125,7 @@ def test_create_mod_message():
     assert mod_message.Body.split(DELIMITER)[-1] == '\n\nMr. Quibbles: Skynet is people.\n\n'
 
 @with_setup(setup_func, teardown_func)
-def test_build_unmoderated_request_message_body():
+def test_build_moderation_request_message_body():
     u = User()
     u.save()
     
