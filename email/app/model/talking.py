@@ -148,11 +148,30 @@ def create_mod_request_email(snip):
     
 
 def build_mod_request_message_body(snip):
-    pass
+
+    snips = [snip for snip in last_snip.conversation.snip_set.order_by('sequence').all()]
+    
+    body = DELIMITER + """
+        Mr. Quibbles: I heard this on the grapevine:
+            \"""" + snips[-1].prompt + """
+            How would you respond?
+            
+            """
+    answers = snip.answer_set.all()
+    
+    body += """
+                """ + answers[0].text + """
+                
+                or
+                
+                """ + answers[1].text + '\n\n'
+    
+    body += ''
+    #In progress
 
 def create_mod_email(snip):
 
-    message = MailResponse(From="mod-%s@mr.quibbl.es" % snip.id, Subject="Mr. Quibbles wants you to know...", Body=build_mod_message_body(snip))
+    message = MailResponse(From="mod-%s@mr.quibbl.es" % snip.id, Subject="Mr. Quibbles wants you your input...", Body=build_mod_message_body(snip))
     
     return message
 
@@ -161,11 +180,11 @@ def build_mod_message_body(last_snip):
     snips = [snip for snip in last_snip.conversation.snip_set.order_by('sequence').all()]
     
     body = DELIMITER + '\n\nMr. Quibbles: ' + snips[-1].get_response() + '\n\n'
-    body += build_mod_message_previous_conversation(snips)
+    body += build_moderated_message_previous_conversation(snips)
     
     return body
 
-def build_mod_message_previous_conversation(snips):
+def build_moderated_message_previous_conversation(snips):
     previous_conversation = DELIMITER + '\n\nThe conversation so far...\n'
     
     for snip in snips:
@@ -174,15 +193,21 @@ def build_mod_message_previous_conversation(snips):
     
     return previous_conversation
 
+def build_unmoderated_message_previous_conversation(unmoderated_snip, moderated_snips):
+    previous_conversation = DELIMITER + '\n\nThe conversation so far...\n'
+    
+    for snip in moderated_snips:
+        previous_conversation += DELIMITER + '\n\nYou: ' + snip.prompt + '\n\n'
+        previous_conversation += DELIMITER + '\n\nMr. Quibbles: ' + snip.get_response() + '\n\n'
+    previous_conversation += DELIMITER + '\n\nYou: ' + unmoderated_snip.prompt + '\n\n'
+    
+    return previous_conversation
+
 def build_answer_message_body(answer):
     
     snips = [snip for snip in answer.snip.conversation.snip_set.order_by('sequence').all()][:-1]
     
-    body = DELIMITER + '\n\nThe conversation so far...\n'
-    for snip in snips:
-        body += DELIMITER + '\n\nYou: ' + snip.prompt + '\n\n'
-        body += DELIMITER + '\n\nMr. Quibbles: ' + snip.get_response() + '\n\n'
-    body += DELIMITER + '\n\nYou: ' + answer.snip.prompt + '\n\n'
+    body = build_unmoderated_message_previous_conversation(answer.snip,snips)
     
     return body
 
