@@ -92,8 +92,8 @@ def build_answer_message_body(answer):
     snips.order_by('-sequence')
     
     message = answer.snip.prompt + ('\n'*2)
-    
-    for index in range(len(snips),1):
+    print(len(snips))
+    for index in range(1,len(snips)):
         snip = snips[index]
         message += DELIMITER + ('\n'*2) + snip.get_response() + ('\n'*2)
         message += DELIMITER + ('\n'*2) + snip.prompt + ('\n'*2)

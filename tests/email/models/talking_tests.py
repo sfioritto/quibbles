@@ -23,6 +23,7 @@ def test_get_answer_message():
     s2.save()
     
     a2 = Answer(snip=s2)
+    a2.save()
     
     print get_answer_message(a2).Body
     assert len(get_answer_message(a2).Body.split(DELIMITER)) == 4, "NOT ENOUGH DELIMITERS!"

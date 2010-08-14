@@ -30,17 +30,17 @@ class Snip(models.Model):
     sequence = models.IntegerField()
     
     def get_response(self):
-        moderated_answers = snip.moderated_set.all()
+        moderated_answers = self.moderated_set.all()
         
         if len(moderated_answers) == 0:
-            answers = Snip.answers_set.all()
+            answers = self.answer_set.all()
             
             if len(answers) == 0:
                 return None
             else:
                 return answers[0].text
         else:
-            return moderated_answers[0]
+            return moderated_answers[0].text
 
 class Answer(models.Model):
 
