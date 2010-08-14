@@ -10,8 +10,12 @@ class User(models.Model):
     def enough_karma(self):
         return self.karma >= 3
 
-    def add_karma(self):
-        self.karma = self.karma + 1
+    def add_karma(self, work_count=None):
+        if work_count == None:
+            self.karma += 1
+        else:
+            self.karma += 3 - work_count
+        
         self.save()
 
     def use_karma(self):
@@ -43,7 +47,7 @@ class Snip(models.Model):
     sequence = models.IntegerField()
 
     def ready_to_moderate(self):
-        return len(self.answers_set.all())
+        return len(self.answer_set.all())
     
     def get_response(self):
         moderated_answers = self.moderated_set.all()

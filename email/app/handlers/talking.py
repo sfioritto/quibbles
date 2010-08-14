@@ -16,9 +16,11 @@ def TALK(message, host=None):
         q = queue.Queue("run/work")
         q.push(msg)
 
-    for work in talking.get_work(user):
-        talking.send(work, user)
+    work_messages = talking.get_work(user) 
+    user.add_karma(len(work_messages))
 
+    for work in work_messages:
+        talking.send(work, user)
 
 @route("answer-(answer_id)@(host)")
 @route("mod-(snip_id)@(host)")
@@ -33,13 +35,14 @@ def ANSWERING(message, answer_id=None, snip_id=None, host=None):
     user = talking.get_user(message)
 
     if answer_id:
+        print('i did it!')
         answer = talking.get_answer(answer_id)
         answer.text = talking.scrape_response(message.body())
         answer.save()
         snip = answer.snip
         
         user.add_karma()
-
+        
         if snip.ready_to_moderate():
             modwork = talking.create_mod_email(snip)
             q = queue.Queue("run/work")
