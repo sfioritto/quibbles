@@ -1,6 +1,7 @@
 from nose.tools import *
 from webapp.talking.models import User, Conversation, Answer, Snip, Moderated
 from app.model.talking import *
+from lamson.mail import MailResponse
 
 sender = "test@localhost"
 
@@ -16,7 +17,14 @@ def teardown_func():
     pass
 
 def test_get_user():
-    pass
+    u = User(email='test@localhost')
+    
+    msg = MailResponse(To="talk@mr.quibbl.es", From="test@localhost", Subject="Mr. Quibbles wants to your input", Body='test')
+    
+    new_u = get_user(msg)
+    
+    assert new_u.email == u.email 
+    
 
 @with_setup(setup_func, teardown_func)
 def test_get_answer_message():
