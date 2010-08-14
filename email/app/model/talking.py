@@ -110,7 +110,7 @@ def send(work, user):
 
 def get_answer_message(answer):
     
-    message = MailResponse(From="answer-%s@mr.quibbl.es" % answer.id, Subject="Mr. Quibbles wants to your input", Body=build_answer_message_body(answer))
+    message = MailResponse(From="answer-%s@mr.quibbl.es" % answer.id, Subject="Mr. Quibbles wants your input", Body=build_answer_message_body(answer))
 
     return message
 
@@ -124,7 +124,7 @@ def build_mod_message_body(last_snip):
     
     snips = [snip for snip in last_snip.conversation.snip_set.order_by('sequence').all()]
     
-    body = 'The conversation so far...\n'
+    body = DELIMITER + '\n\nThe conversation so far...\n'
     for snip in snips:
         body += DELIMITER + '\n\nYou: ' + snip.prompt + '\n\n'
         body += DELIMITER + '\n\nMr. Quibbles: ' + snip.get_response() + '\n\n'
@@ -135,7 +135,7 @@ def build_answer_message_body(answer):
     
     snips = [snip for snip in answer.snip.conversation.snip_set.order_by('sequence').all()][:-1]
     
-    body = 'The conversation so far...\n'
+    body = DELIMITER + '\n\nThe conversation so far...\n'
     for snip in snips:
         body += DELIMITER + '\n\nYou: ' + snip.prompt + '\n\n'
         body += DELIMITER + '\n\nMr. Quibbles: ' + snip.get_response() + '\n\n'

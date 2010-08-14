@@ -120,4 +120,4 @@ def test_get_answer_message():
     a2.save()
 
     print get_answer_message(a2).Body
-    assert len(get_answer_message(a2).Body.split(DELIMITER)) == 4, "NOT ENOUGH DELIMITERS!"
+    assert len(get_answer_message(a2).Body.split(DELIMITER)) == 5, "NOT ENOUGH DELIMITERS!"
