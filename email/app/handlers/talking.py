@@ -14,7 +14,7 @@ def TALK(message, host=None):
 
     for msg in messages:
         q = queue.Queue("run/work")
-        q.push(msg)
+        q.push((user, msg))
 
     for work in talking.get_work():
         talking.send(work, user)
@@ -40,7 +40,7 @@ def ANSWERING(message, answer_id=None, snip_id=None, host=None):
         if snip.ready_to_moderate():
             modwork = talking.create_mod_email(snip)
             q = queue.Queue("run/work")
-            q.push(msg)
+            q.push((snip.conversation.user, modwork))
 
     # we got a moderated response
     elif snip_id:

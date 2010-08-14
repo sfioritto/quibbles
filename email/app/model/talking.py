@@ -81,12 +81,26 @@ def get_answer(id):
     return Answer.objects.get(pk=id)
 
 
-def get_work():
+def get_work(user):
     
     q = queue.Queue("run/work")
     work = []
-    
-    return [q.pop()[1], q.pop()[1]]
+    invalid = []
+
+    # this may return an empty list of work
+    while q.count > 0:
+        u, msg = q.pop()
+        if user == u:
+            invalid.append((u, msg))
+        else:
+            work.append(msg)
+            if len(work) == 3:
+                break
+
+    for i in invalid:
+        q.push(i)
+
+    return work
 
 
 def send(work, user):
