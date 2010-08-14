@@ -1,4 +1,5 @@
-from webapp.talking.models import User, Conversation
+from webapp.talking.models import User, Conversation, Snip, Answer
+from lamson.mail import MailRequest
 from email.utils import parseaddr
 from lamson import queue
 
@@ -26,7 +27,6 @@ def find_user(address):
     else:
         return None
 
-
 def create_conversation(user):
 
     conv = Conversation(user=user)
@@ -42,11 +42,18 @@ def get_snip(message, conv):
     else:
         text = ""
 
-
     snip = Snip(prompt=text, 
-                conversation=conv)
+                conversation=conv,
+                sequence=_get_snip_sequence())
     snip.save()
 
+def _get_snip_sequence(conv):
+    last_snip = conv.get_last_snip()
+    
+    if last_snip == None:
+        return 0
+    else:
+        return last_snip.sequence + 1
 
 def get_answer_messages(snip):
     
@@ -55,7 +62,7 @@ def get_answer_messages(snip):
     a1.save()
     a2.save()
     
-    return get_message(a1), get_message(a2)
+    return get_answer_message(a1), get_answer_message(a2)
 
 
 def get_work():
@@ -69,12 +76,22 @@ def send(work, user):
     relay.deliver(work, To=work['To'], From=work['From'])
 
 
+def get_answer_message(answer):
     
-                 
+    message = MailResponse(From="mr.quibbles-%s@quibbl.es" % answer.id, Subject="Mr. Quibbles wants to know...", Body=build_message_body(answer))
 
-    
-    
-    
+    return message
 
-
+def build_answer_message_body(answer):
     
+    snips = answer.snip.conversation.snip_set.all()
+    snips.order_by('-sequence')
+    
+    message = answer.snip.prompt + ('\n'*2)
+    
+    for index in range(len(snips),1):
+        snip = snips[index]
+        message += DELIMITER + ('\n'*2) + snip.get_response() + ('\n'*2)
+        message += DELIMITER + ('\n'*2) + snip.prompt + ('\n'*2)
+    
+    return message
