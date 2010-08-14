@@ -69,6 +69,11 @@ def get_answer_messages(snip):
     return get_answer_message(a1), get_answer_message(a2)
 
 
+def get_answer(id):
+    
+    return Answer.objects.get(pk=id)
+
+
 def get_work():
     
     q = queue.Queue("run/work")
