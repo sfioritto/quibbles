@@ -99,7 +99,7 @@ def get_work(user):
         else:
             work.append(msg)
 
-        if len(work) == 3:
+        if len(work) == 2:
             break
         
     for msg in invalid:
@@ -222,7 +222,6 @@ def create_mod(snip, message):
                   snip = snip)
     m.save()
     return m
-
 
 def continue_conversation(user):
     user.use_karma()

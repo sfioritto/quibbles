@@ -43,7 +43,6 @@ def ANSWERING(message, answer_id=None, snip_id=None, conv_id=None, host=None):
     user = talking.get_user(message)
 
     if answer_id:
-        print('i did it!')
         answer = talking.get_answer(answer_id)
         answer.text = talking.scrape_response(message.body())
         answer.save()

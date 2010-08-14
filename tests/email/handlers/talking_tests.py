@@ -77,4 +77,4 @@ def test_add_karma():
     
     ans_u = User.objects.filter(email='new@sender.com')[0]
     
-    assert ans_u.karma == 2
+    assert ans_u.karma == 1
