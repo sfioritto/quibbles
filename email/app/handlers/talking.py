@@ -20,14 +20,14 @@ def TALK(message, host=None):
         talking.send(work, user)
 
 
-@route("(answer_id)@(host)")
-@route("(snip_id)@(host)")
+@route("answer-(answer_id)@(host)")
+@route("mod-(snip_id)@(host)")
 def START(*args, **kwargs):
     return ANSWERING(*args, **kwargs)
 
 
-@route("(answer_id)@(host)")
-@route("(snip_id)@(host)")
+@route("answer-(answer_id)@(host)")
+@route("mod-(snip_id)@(host)")
 def ANSWERING(message, answer_id=None, snip_id=None, host=None):
     
     user = talking.get_user(message)

@@ -2,8 +2,9 @@ from webapp.talking.models import User, Conversation, Snip, Answer, Moderated
 from email.utils import parseaddr
 from lamson import queue
 from lamson.mail import MailResponse
+from config import settings
 from config.settings import relay
-
+import re
 
 DELIMITER = '------------------------------'
 
@@ -87,7 +88,48 @@ def get_answer(id):
 def get_work(user):
     
     q = queue.Queue("run/work")
-    return (q.pop()[1], q.pop()[1])
+    invalid = []
+    work = []
+
+    while q.count() > 0:
+        key, msg = q.pop()
+
+        if find_owner(msg) == user:
+            invalid.append(msg)
+        else:
+            work.append(msg)
+
+        if len(work) == 3:
+            break
+        
+    for msg in invalid:
+        q.push(msg)
+    return work
+
+
+def find_owner(msg):
+
+    #TODO: this is pretty brittle
+    answer_id = re.compile('answer-(%s)@(%s)' % (settings.router_defaults['answer_id'], settings.router_defaults['host']))
+    snip_id = re.compile('answer-(%s)@(%s)' % (settings.router_defaults['snip_id'], settings.router_defaults['host']))
+    
+    frm = msg['From']
+
+    user = None
+    # we can use the id to lookup an answer
+    if answer_id.match(frm):
+        id = answer_id.match(frm).groups()[0]
+        answer = Answer.objects.get(pk=id)
+        user = answer.snip.conversation.user
+
+    # we can use the id to lookup a moderated db record
+    elif snip_id.match(frm):
+        id = snip_id.match(frm).groups()[0]
+        mod = Moderated.objects.get(pk=id)
+        user = mod.snip.conversation.user
+
+    return user
+
 
 
 def send(work, user):
