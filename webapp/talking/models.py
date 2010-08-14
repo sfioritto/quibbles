@@ -4,7 +4,17 @@ from django.db import models
 class User(models.Model):
 
     created_on = models.DateTimeField(auto_now_add=True)
+    karma = models.IntegerField(default=0)
     email = models.CharField(max_length=512,unique=True)
+
+    def enough_karma(self):
+        return self.karma >= 3
+
+
+    def use_karma(self):
+        assert self.karma >= 3, "Not enough karma to use."
+        self.karma = self.karma - 3
+        self.save()
 
     
 class Conversation(models.Model):
@@ -28,6 +38,9 @@ class Snip(models.Model):
     conversation = models.ForeignKey(Conversation)
     prompt = models.TextField(blank=True)
     sequence = models.IntegerField()
+
+    def ready_to_moderate(self):
+        return len(self.answers_set.all())
     
     def get_response(self):
         moderated_answers = self.moderated_set.all()
@@ -36,7 +49,7 @@ class Snip(models.Model):
             answers = self.answer_set.all()
             
             if len(answers) == 0:
-                return None
+                return "Hmmm... I'm not sure I know enough to say anything meaningful here."
             else:
                 return answers[0].text
         else:
