@@ -1,5 +1,6 @@
 from webapp.talking.models import User, Conversation
 from email.utils import parseaddr
+from lamson import queue
 
 DELIMITER = '------------------------------'
 
@@ -53,6 +54,20 @@ def get_answer_messages(snip):
     a2 = Answer(snip=snip)
     a1.save()
     a2.save()
+    
+    return get_message(a1), get_message(a2)
+
+
+def get_work():
+    
+    q = queue.Queue("run/work")
+    return q.pull(), q.pull()
+
+
+def send(work, user):
+    work['To'] = user.email
+    relay.deliver(work, To=work['To'], From=work['From'])
+
 
     
                  
