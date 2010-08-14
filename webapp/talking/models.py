@@ -45,6 +45,7 @@ class Snip(models.Model):
     conversation = models.ForeignKey(Conversation)
     prompt = models.TextField(blank=True)
     sequence = models.IntegerField()
+    complete = models.BooleanField()
 
     def ready_to_moderate(self):
         return len(self.answer_set.all())
