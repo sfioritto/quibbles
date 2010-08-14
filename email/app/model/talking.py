@@ -82,10 +82,26 @@ def send(work, user):
 
 def get_answer_message(answer):
     
-    message = MailResponse(From="mr.quibbles-%s@quibbl.es" % answer.id, Subject="Mr. Quibbles wants to know...", Body=build_answer_message_body(answer))
+    message = MailResponse(From="answer-%s@mr.quibbl.es" % answer.id, Subject="Mr. Quibbles wants to your input", Body=build_answer_message_body(answer))
 
     return message
 
+def create_mod_email(snip):
+
+    message = MailResponse(From="mod-%s@mr.quibbl.es" % snip.id, Subject="Mr. Quibbles wants you to know...", Body=build_mod_message_body(snip))
+    
+    return message
+
+def build_mod_message_body(last_snip):
+    
+    snips = [snip for snip in last_snip.conversation.snip_set.order_by('sequence').all()]
+    
+    body = 'The conversation so far...\n'
+    for snip in snips:
+        body += DELIMITER + '\n\nYou: ' + snip.prompt + '\n\n'
+        body += DELIMITER + '\n\nMr. Quibbles: ' + snip.get_response() + '\n\n'
+    
+    return body
 
 def build_answer_message_body(answer):
     
