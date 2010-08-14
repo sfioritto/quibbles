@@ -225,4 +225,8 @@ def create_mod(snip, message):
 
 
 def continue_conversation(user):
-    pass
+    user.use_karma()
+
+
+def get_conversation(id):
+    return Conversation.objects.get(pk=id)

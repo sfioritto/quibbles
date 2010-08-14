@@ -6,11 +6,12 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'webapp.settings'
 # You may add additional parameters such as `username' and `password' if your
 # relay server requires authentication, `starttls' (boolean) or `ssl' (boolean)
 # for secure connections.
-relay_config = {'host': 'localhost', 'port': 8825}
+relay_config = {'host': 'localhost', 'port': 1025}
 
-receiver_config = {'host': 'localhost', 'port': 8823}
+receiver_config = {'host': '0.0.0.0', 'port': 25}
 
 handlers = ['app.handlers.talking']
+
 
 router_defaults = {
     'host': 'mr\\.quibbl\\.es',
@@ -22,4 +23,3 @@ router_defaults = {
 template_config = {'dir': 'app', 'module': 'templates'}
 
 # the config/boot.py will turn these values into variables set in settings
-

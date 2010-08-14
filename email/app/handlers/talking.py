@@ -3,12 +3,7 @@ from lamson import queue
 from app.model import talking
 
 
-@route("talk@(host)")
-@stateless
-def TALK(message, host=None):
-
-    user = talking.get_user(message)
-    conv = talking.create_conversation(user)
+def create_work(message, conv):
     snip = talking.create_snip(message, conv)
     messages = talking.get_answer_messages(snip)
 
@@ -16,11 +11,23 @@ def TALK(message, host=None):
         q = queue.Queue("run/work")
         q.push(msg)
 
+def send_work(user):
+    
     work_messages = talking.get_work(user) 
     user.add_karma(len(work_messages))
-
+    
     for work in work_messages:
         talking.send(work, user)
+
+@route("talk@(host)")
+@stateless
+def TALK(message, host=None):
+
+    user = talking.get_user(message)
+    conv = talking.create_conversation(user)
+
+    create_work(message, conv)
+    send_work(user)
 
 @route("answer-(answer_id)@(host)")
 @route("mod-(snip_id)@(host)")
@@ -30,7 +37,8 @@ def START(*args, **kwargs):
 
 @route("answer-(answer_id)@(host)")
 @route("mod-(snip_id)@(host)")
-def ANSWERING(message, answer_id=None, snip_id=None, host=None):
+@route("conv-(conv_id)@(host)")
+def ANSWERING(message, answer_id=None, snip_id=None, conv_id=None, host=None):
     
     user = talking.get_user(message)
 
@@ -53,8 +61,16 @@ def ANSWERING(message, answer_id=None, snip_id=None, host=None):
         snip = talking.get_snip(snip_id)
         talking.create_mod(snip, message)
 
+    #this is the continuation of a conversation
+    elif conv_id:
+        conv = talking.get_conversation(conv_id)
+        if conv.pendingprompt:
+            pass
+        
+
+    # if they have an outstanding conversation, send them
+    # the response they've been waiting for if they have enough karma
     if user.enough_karma():
-        user.use_karma()
         talking.continue_conversation(user)
 
 
