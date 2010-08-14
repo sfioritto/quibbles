@@ -5,7 +5,22 @@ from app.model.talking import *
 sender = "test@localhost"
 
 def setup_func():
-    u = User(email=sender)
+    
+    User.objects.all().delete()
+    Conversation.objects.all().delete()
+    Answer.objects.all().delete()
+    Moderated.objects.all().delete()
+    Snip.objects.all().delete()
+    
+def teardown_func():
+    pass
+
+def test_get_user():
+    pass
+
+@with_setup(setup_func, teardown_func)
+def test_get_answer_message():
+    u = User()
     u.save()
     
     c = Conversation(user=u)
@@ -26,13 +41,5 @@ def setup_func():
     a2 = Answer(snip=s2)
     a2.save()
 
-def teardown_func():
-    pass
-
-def test_get_user():
-    pass
-
-def test_get_answer_message():
-    snips = User.objects.get(email=sender)
-    
+    print get_answer_message(a2).Body
     assert len(get_answer_message(a2).Body.split(DELIMITER)) == 3, "NOT ENOUGH DELIMITERS!"
