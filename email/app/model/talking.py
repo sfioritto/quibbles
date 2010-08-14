@@ -56,7 +56,8 @@ def create_snip(message, conv):
     text = scrape_response(message.body())
     snip = Snip(prompt=text, 
                 conversation=conv,
-                sequence=get_snip_sequence(conv))
+                sequence=get_snip_sequence(conv),
+                complete=False)
     snip.save()
     return snip
 
@@ -99,7 +100,7 @@ def get_work(user):
         else:
             work.append(msg)
 
-        if len(work) == 3:
+        if len(work) == 2:
             break
         
     for msg in invalid:

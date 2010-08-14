@@ -8,19 +8,19 @@ class User(models.Model):
     email = models.CharField(max_length=512, unique=True, required=True)
 
     def enough_karma(self):
-        return self.karma >= 3
+        return self.karma >= 2
 
     def add_karma(self, work_count=None):
         if work_count == None:
             self.karma += 1
         else:
-            self.karma += 3 - work_count
+            self.karma += 2 - work_count
         
         self.save()
 
     def use_karma(self):
-        assert self.karma <= 3, "Not enough karma to use."
-        self.karma = self.karma - 3
+        assert self.karma <= 2, "Not enough karma to use."
+        self.karma = self.karma - 2
         self.save()
 
     
@@ -47,6 +47,7 @@ class Snip(models.Model):
     conversation = models.ForeignKey(Conversation)
     prompt = models.TextField(blank=True)
     sequence = models.IntegerField()
+    complete = models.BooleanField()
 
     def ready_to_moderate(self):
         return len(self.answer_set.all())
