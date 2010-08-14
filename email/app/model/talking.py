@@ -37,14 +37,20 @@ def create_conversation(user):
     return conv
 
 
-def get_snip(message, conv):
-
+def scrape_response(message):
+    """
+    Grab a chunk of text from the top of the message.
+    """
     chunks = message.body().split(DELIMITER)
     if chunks:
         text = chunks[0]
     else:
         text = ""
+    return text
 
+
+def create_snip(message, conv):
+    text = scrape_response(message)
     snip = Snip(prompt=text, 
                 conversation=conv,
                 sequence=_get_snip_sequence(conv))
@@ -58,6 +64,7 @@ def _get_snip_sequence(conv):
         return 0
     else:
         return last_snip.sequence + 1
+
 
 def get_answer_messages(snip):
     
@@ -77,6 +84,8 @@ def get_answer(id):
 def get_work():
     
     q = queue.Queue("run/work")
+    work = []
+    
     return [q.pop()[1], q.pop()[1]]
 
 
@@ -118,3 +127,19 @@ def build_answer_message_body(answer):
         body += DELIMITER + '\n\nMr. Quibbles: ' + snip.get_response() + '\n\n'
     body += DELIMITER + '\n\nYou: ' + answer.snip.prompt + '\n\n'
     return body
+
+
+def get_snip(id):
+    return Snip.objects.get(pk=id)
+
+
+def create_mod(snip, message):
+    text = scrape_response(message)
+    m = Moderated(text = text,
+                  snip = snip)
+    m.save()
+    return m
+
+
+def continue_conversation(user):
+    pass

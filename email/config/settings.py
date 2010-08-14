@@ -14,7 +14,8 @@ handlers = ['app.handlers.talking']
 
 router_defaults = {
     'host': 'mr\\.quibbl\\.es',
-    'conv_id': '[0-9]+',
+    'answer_id' : '[0-9]+',
+    'snip_id': '[0-9]+',
 }
 
 template_config = {'dir': 'app', 'module': 'templates'}

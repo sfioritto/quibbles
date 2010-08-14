@@ -49,7 +49,7 @@ class Snip(models.Model):
             answers = self.answer_set.all()
             
             if len(answers) == 0:
-                return None
+                return "Hmmm... I'm not sure I know enough to say anything meaningful here."
             else:
                 return answers[0].text
         else:
