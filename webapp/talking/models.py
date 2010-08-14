@@ -4,7 +4,7 @@ from django.db import models
 class User(models.Model):
 
     created_on = models.DateTimeField(auto_now_add=True)
-    email = models.CharField(max_length=512)
+    email = models.CharField(max_length=512,unique=True)
 
     
 class Conversation(models.Model):
