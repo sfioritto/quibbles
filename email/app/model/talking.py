@@ -88,11 +88,12 @@ def get_answer_message(answer):
 
 def build_answer_message_body(answer):
     
-    snips = answer.snip.conversation.snip_set.order_by('-sequence').all()[1:]
+    snips = [snip for snip in answer.snip.conversation.snip_set.order_by('sequence').all()][:-1]
     
-    body = answer.snip.prompt + '\n\n'
+    body = 'The conversation so far...\n'
     for snip in snips:
-        body += DELIMITER + '\n\n' + snip.get_response() + '\n\n'
-        body += DELIMITER + '\n\n' + snip.prompt + '\n\n'
-    
+        body += DELIMITER + '\n\nYou: ' + snip.prompt + '\n\n'
+        body += DELIMITER + '\n\nMr. Quibbles: ' + snip.get_response() + '\n\n'
+    body += DELIMITER + '\n\nYou: ' + answer.snip.prompt + '\n\n'
+    print body
     return body
