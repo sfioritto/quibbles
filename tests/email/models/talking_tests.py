@@ -16,6 +16,7 @@ def setup_func():
 def teardown_func():
     pass
 
+@with_setup(setup_func, teardown_func)
 def test_get_user():
     u = User(email='test@localhost')
     
@@ -24,7 +25,25 @@ def test_get_user():
     new_u = get_user(msg)
     
     assert new_u.email == u.email 
+
+@with_setup(setup_func, teardown_func)    
+def test_find_users():
+    address = 'test@localhost'
+    address2 = 'test2@localhost'
     
+    u1 = User(email=address)
+    u1.save()
+    
+    u2 = User(email=address2)
+    u2.save()
+    
+    found_user = find_user(address)
+    
+    assert address == found_user.email
+    
+    User.objects.all().delete()
+    
+    assert find_user(address) == None
 
 @with_setup(setup_func, teardown_func)
 def test_get_answer_message():
