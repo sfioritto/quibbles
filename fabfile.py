@@ -3,7 +3,7 @@ from fabric.api import *
 env.hosts = ['mr.quibbl.es']
 env.approot = "/var/quibbles/www"
 env.prodhome = "/var/quibbles"
-env.emailroot = "/var/quibbles/www/emails"
+env.emailroot = "/var/quibbles/www/email"
 
 
 def test():
@@ -53,9 +53,9 @@ def switch(hash):
 
     with cd(env.approot):
         sudo("cp prod/webapp/settings.py webapp/settings.py")
-        sudo("cp prod/emails/settings.py emails/config/settings.py")
-        sudo("ln -s /var/quibbles/run emails/run")
-        sudo("ln -s /var/quibbles/logs emails/logs")
+        sudo("cp prod/email/settings.py email/config/settings.py")
+        sudo("ln -s /var/quibbles/run email/run")
+        sudo("ln -s /var/quibbles/logs email/logs")
         sudo("rm -rf tests/")
 
 
