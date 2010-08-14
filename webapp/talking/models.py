@@ -5,7 +5,7 @@ class User(models.Model):
 
     created_on = models.DateTimeField(auto_now_add=True)
     karma = models.IntegerField(default=0)
-    email = models.CharField(max_length=512,unique=True)
+    email = models.CharField(max_length=512, unique=True, required=True)
 
     def enough_karma(self):
         return self.karma >= 3
@@ -28,6 +28,8 @@ class Conversation(models.Model):
     
     created_on = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User)
+    pendingprompt = models.BooleanField(default=False)
+    subject = models.TextField(default="")
     
     def get_last_snip(self):
         snips = self.snip_set.all()

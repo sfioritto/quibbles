@@ -176,6 +176,7 @@ def create_mod_email(snip):
     
     return message
 
+
 def build_mod_message_body(last_snip):
     
     snips = [snip for snip in last_snip.conversation.snip_set.order_by('sequence').all()]
@@ -185,6 +186,7 @@ def build_mod_message_body(last_snip):
     
     return body
 
+
 def build_moderated_message_previous_conversation(snips):
     previous_conversation = DELIMITER + '\n\nThe conversation so far...\n'
     
@@ -193,6 +195,7 @@ def build_moderated_message_previous_conversation(snips):
         previous_conversation += DELIMITER + '\n\nMr. Quibbles: ' + snip.get_response() + '\n\n'
     
     return previous_conversation
+
 
 def build_unmoderated_message_previous_conversation(unmoderated_snip, moderated_snips):
     previous_conversation = DELIMITER + '\n\nThe conversation so far...\n'
@@ -224,8 +227,14 @@ def create_mod(snip, message):
     return m
 
 
-def continue_conversation(user):
+def continue_conversation(user, conv):
     user.use_karma()
+    conv.pendingprompt = True
+    conv.save()
+    message = MailResponse(From="conv-%s@mr.quibbl.es" % conv.id, Subject=conv.subject, Body=build_conversation_body(answer))
+    message['To'] = user.email
+    relay.deliver(message, To=message['To'], From=message['From'])
+
 
 
 def get_conversation(id):

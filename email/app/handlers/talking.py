@@ -25,7 +25,8 @@ def TALK(message, host=None):
 
     user = talking.get_user(message)
     conv = talking.create_conversation(user)
-
+    conv.subject = "Re: " + message['Subject']
+    conv.save()
     create_work(message, conv)
     send_work(user)
 
@@ -64,14 +65,24 @@ def ANSWERING(message, answer_id=None, snip_id=None, conv_id=None, host=None):
     #this is the continuation of a conversation
     elif conv_id:
         conv = talking.get_conversation(conv_id)
+
+        # ignore all emails to continue conversations
+        # that are currently in the process of being answered
         if conv.pendingprompt:
-            pass
+            # this conversation was just waiting to be started again
+            # so create some work already.
+            create_work(message, conv)
+            send_work(user)
+            conv.pendingprompt = False
+            conv.save()
         
 
     # if they have an outstanding conversation, send them
     # the response they've been waiting for if they have enough karma
     if user.enough_karma():
         talking.continue_conversation(user)
+
+    return ANSWERING
 
 
 
