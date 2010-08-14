@@ -10,9 +10,12 @@ class User(models.Model):
     def enough_karma(self):
         return self.karma >= 3
 
+    def add_karma(self):
+        self.karma = self.karma + 1
+        self.save()
 
     def use_karma(self):
-        assert self.karma >= 3, "Not enough karma to use."
+        assert self.karma <= 3, "Not enough karma to use."
         self.karma = self.karma - 3
         self.save()
 

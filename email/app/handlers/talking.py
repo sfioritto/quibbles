@@ -37,6 +37,8 @@ def ANSWERING(message, answer_id=None, snip_id=None, host=None):
         answer.text = talking.scrape_response(message.body())
         answer.save()
         snip = answer.snip
+        
+        user.add_karma()
 
         if snip.ready_to_moderate():
             modwork = talking.create_mod_email(snip)
