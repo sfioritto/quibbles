@@ -5,7 +5,7 @@ class User(models.Model):
 
     created_on = models.DateTimeField(auto_now_add=True)
     karma = models.IntegerField(default=0)
-    email = models.CharField(max_length=512)
+    email = models.CharField(max_length=512,unique=True)
 
     def enough_karma(self):
         return self.karma >= 3

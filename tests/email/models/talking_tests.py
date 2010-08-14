@@ -2,9 +2,10 @@ from nose.tools import *
 from webapp.talking.models import User, Conversation, Answer, Snip, Moderated
 from app.model.talking import *
 
-def test_get_answer_message():
+sender = "test@localhost"
 
-    u = User()
+def setup_func():
+    u = User(email=sender)
     u.save()
     
     c = Conversation(user=u)
@@ -24,5 +25,14 @@ def test_get_answer_message():
     
     a2 = Answer(snip=s2)
     a2.save()
+
+def teardown_func():
+    pass
+
+def test_get_user():
+    pass
+
+def test_get_answer_message():
+    snips = User.objects.get(email=sender)
     
     assert len(get_answer_message(a2).Body.split(DELIMITER)) == 3, "NOT ENOUGH DELIMITERS!"
