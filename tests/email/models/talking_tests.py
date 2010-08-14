@@ -46,6 +46,15 @@ def test_find_users():
     assert find_user(address) == None
 
 @with_setup(setup_func, teardown_func)
+def test_create_conv():
+    u = User(email='test@localhost')
+    u.save()
+    
+    conv = create_conversation(u)
+    
+    assert len(u.conversation_set.all()) == 1, "Incorrect number of conversations: " + str(len(u.conversation_set.all()))
+
+@with_setup(setup_func, teardown_func)
 def test_get_answer_message():
     u = User()
     u.save()
