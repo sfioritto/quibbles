@@ -29,7 +29,7 @@ def START(*args, **kwargs):
 
 
 @route_like(START)
-def ANSWERING(message, answer_id=None, mod_id, host=None):
+def ANSWERING(message, answer_id=None, mod_id=None, host=None):
 
     # if answer
     # add answer to the conversation
@@ -44,5 +44,6 @@ def ANSWERING(message, answer_id=None, mod_id, host=None):
     # add moderate response to conversation
     # generate response email
     # send it out
+    pass
 
 

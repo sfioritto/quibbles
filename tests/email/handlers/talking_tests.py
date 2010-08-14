@@ -3,6 +3,7 @@ from lamson.testing import *
 from lamson.routing import Router
 from lamson.mail import MailRequest
 from lamson import queue
+from conf import *
 
 
 relay = relay(port=8823)
@@ -17,10 +18,16 @@ def teardown_func():
     pass
 
 @with_setup(setup_func, teardown_func)
-def test_talking(msg=None):
+def test_talking():
 
     """
     This message should move the state into
     TALKING.
     """
-    assert True
+
+    msg = MailRequest('fakepeer', sender, "talk@mr.quibbl.es", open(home("tests/data/emails/question.msg")).read())
+    import pdb; pdb.set_trace()
+    Router.deliver(msg)
+    q = queue.Queue(email('run/work'))
+    assert q.count() == 2, "Queue count is actually %s" % str(q.count())
+
