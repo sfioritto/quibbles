@@ -5,7 +5,7 @@ class User(models.Model):
 
     created_on = models.DateTimeField(auto_now_add=True)
     karma = models.IntegerField(default=0)
-    email = models.CharField(max_length=512, unique=True, required=True)
+    email = models.CharField(max_length=512, unique=True, blank=False, null=False)
 
     def enough_karma(self):
         return self.karma >= 2
@@ -78,9 +78,11 @@ class Moderated(models.Model):
     text = models.TextField(blank=True)
     snip = models.ForeignKey(Snip)
 
+class LamsonState(models.Model):
+    created_on = models.DateTimeField(auto_now_add=True)
+    key = models.CharField(max_length=512)
+    address = models.EmailField()
+    state = models.CharField(max_length=200)
 
-
-
-
-
-
+    def __unicode__(self):
+        return "%s:%s (%s)" % (self.key, self.address, self.state)
