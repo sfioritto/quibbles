@@ -1,3 +1,4 @@
+from config import testing
 from nose.tools import *
 from lamson.testing import *
 from lamson.routing import Router
@@ -26,7 +27,6 @@ def test_talking():
     """
 
     msg = MailRequest('fakepeer', sender, "talk@mr.quibbl.es", open(home("tests/data/emails/question.msg")).read())
-    import pdb; pdb.set_trace()
     Router.deliver(msg)
     q = queue.Queue(email('run/work'))
     assert q.count() == 2, "Queue count is actually %s" % str(q.count())

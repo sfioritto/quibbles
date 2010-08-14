@@ -1,15 +1,18 @@
-from webapp.talking.models import User, Conversation
+from webapp.talking.models import User, Conversation, Snip, Answer
 from email.utils import parseaddr
 from lamson import queue
+from lamson.mail import MailRequest
+from config.settings import relay
+
 
 DELIMITER = '------------------------------'
 
 def get_from_address(message):
     name, address = parseaddr(message['from'])
+    return address
     
     
 def get_user(message):
-        
     addr = get_from_address(message)
     user = find_user(addr)
 
@@ -46,6 +49,7 @@ def get_snip(message, conv):
     snip = Snip(prompt=text, 
                 conversation=conv)
     snip.save()
+    return snip
 
 
 def get_answer_messages(snip):
@@ -55,13 +59,14 @@ def get_answer_messages(snip):
     a1.save()
     a2.save()
     
-    return get_message(a1), get_message(a2)
+    return MailRequest('fakepeer', "sean@allicator.com", "talk@mr.quibbl.es", ""), MailRequest('fakepeer', "sean@allicator.com", "talk@mr.quibbl.es", "")
+
 
 
 def get_work():
     
     q = queue.Queue("run/work")
-    return q.pull(), q.pull()
+    return [q.pop()[1], q.pop()[1]]
 
 
 def send(work, user):
