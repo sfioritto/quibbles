@@ -2,16 +2,22 @@ import logging
 from lamson.routing import route, route_like, stateless
 from config.settings import relay
 from lamson import view
+from app.model import talking
 
 
 @stateless
 @route("talk@(host)")
 def TALK(message, host=None):
-    # build a conversation model
-    # generate two messages for gathering a response
-    # dump them in a queue
-    # pull three messages from the queue (that aren't from this user)
-    # send them the three messages
+    user = talking.get_user(message)
+    conv = talking.create_conversation(user)
+    snip = talking.get_snip(message, conv)
+    messages = talking.get_answer_messages(snip)
+    for msg in messages:
+        #dump into work queue
+        pass
+
+    for work in talking.get_work():
+        talking.send(work)
 
 
 @route("answer_(answer_id)@(host)",
