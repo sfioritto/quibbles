@@ -13,7 +13,8 @@ sender = "test@localhost"
 
 
 def setup_func():
-    pass
+    q = queue.Queue(email('run/work'))
+    q.clear()
 
 def teardown_func():
     pass

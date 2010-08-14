@@ -14,33 +14,34 @@ def TALK(message, host=None):
 
     for msg in messages:
         q = queue.Queue("run/work")
-        q.push((user, msg))
+        q.push(msg)
 
-    for work in talking.get_work():
+    for work in talking.get_work(user):
         talking.send(work, user)
 
 
-@route("answer_(answer_id)@(host)",
-       "mod_(mod_id)@(host)")
+@route("(answer_id)@(host)")
+@route("(snip_id)@(host)")
 def START(*args, **kwargs):
     return ANSWERING(*args, **kwargs)
 
 
-@route_like(START)
+@route("(answer_id)@(host)")
+@route("(snip_id)@(host)")
 def ANSWERING(message, answer_id=None, snip_id=None, host=None):
     
     user = talking.get_user(message)
 
     if answer_id:
         answer = talking.get_answer(answer_id)
-        answer.text = talking.scrape_response(message)
+        answer.text = talking.scrape_response(message.body())
         answer.save()
         snip = answer.snip
 
         if snip.ready_to_moderate():
             modwork = talking.create_mod_email(snip)
             q = queue.Queue("run/work")
-            q.push((snip.conversation.user, modwork))
+            q.push(modwork)
 
     # we got a moderated response
     elif snip_id:

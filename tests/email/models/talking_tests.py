@@ -1,7 +1,7 @@
 from nose.tools import *
 from webapp.talking.models import User, Conversation, Answer, Snip, Moderated
 from app.model.talking import *
-from lamson.mail import MailResponse
+from lamson.mail import MailResponse, MailRequest
 
 sender = "test@localhost"
 
@@ -59,17 +59,17 @@ def test_scrape_response():
     body = 'test' + DELIMITER + 'test2'
     msg = MailResponse(To="talk@mr.quibbl.es", From="test@localhost", Subject="Mr. Quibbles wants to your input", Body=body)
     
-    assert scrape_response(msg) == 'test'
+    assert scrape_response(msg.Body) == 'test'
     
     body = ''
     msg = MailResponse(To="talk@mr.quibbl.es", From="test@localhost", Subject="Mr. Quibbles wants to your input", Body=body)
     
-    assert scrape_response(msg) == ''
+    assert scrape_response(msg.Body) == ''
 
 @with_setup(setup_func, teardown_func)
 def test_create_snip():
     body = 'test' + DELIMITER + 'test2'
-    msg = MailResponse(To="talk@mr.quibbl.es", From="test@localhost", Subject="Mr. Quibbles wants to your input", Body=body)
+    msg = MailRequest('fakepeer', "test@localhost", "talk@mr.quibbl.es", body)
     u = User(email="test@localhost")
     u.save()
     
@@ -83,7 +83,7 @@ def test_create_snip():
 @with_setup(setup_func, teardown_func)
 def test_get_snip_sequence():
     body = 'test' + DELIMITER + 'test2'
-    msg = MailResponse(To="talk@mr.quibbl.es", From="test@localhost", Subject="Mr. Quibbles wants to your input", Body=body)
+    msg = MailRequest('fakepeer', "test@localhost", "talk@mr.quibbl.es", body)
     u = User(email="test@localhost")
     u.save()
     

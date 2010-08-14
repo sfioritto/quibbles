@@ -37,11 +37,12 @@ def create_conversation(user):
     return conv
 
 
-def scrape_response(message):
+def scrape_response(body):
     """
     Grab a chunk of text from the top of the message.
+    Needs a string which is the body of the email
     """
-    chunks = message.Body.split(DELIMITER)
+    chunks = body.split(DELIMITER)
     if chunks:
         text = chunks[0]
     else:
@@ -50,12 +51,14 @@ def scrape_response(message):
 
 
 def create_snip(message, conv):
-    text = scrape_response(message)
+    assert 'body' in dir(message), "Expecting a MailRequest"
+    text = scrape_response(message.body())
     snip = Snip(prompt=text, 
                 conversation=conv,
                 sequence=get_snip_sequence(conv))
     snip.save()
     return snip
+
 
 def get_snip_sequence(conv):
     last_snip = conv.get_last_snip()
@@ -84,23 +87,7 @@ def get_answer(id):
 def get_work(user):
     
     q = queue.Queue("run/work")
-    work = []
-    invalid = []
-
-    # this may return an empty list of work
-    while q.count > 0:
-        u, msg = q.pop()
-        if user == u:
-            invalid.append((u, msg))
-        else:
-            work.append(msg)
-            if len(work) == 3:
-                break
-
-    for i in invalid:
-        q.push(i)
-
-    return work
+    return (q.pop()[1], q.pop()[1])
 
 
 def send(work, user):
@@ -148,7 +135,7 @@ def get_snip(id):
 
 
 def create_mod(snip, message):
-    text = scrape_response(message)
+    text = scrape_response(message.body())
     m = Moderated(text = text,
                   snip = snip)
     m.save()
