@@ -27,6 +27,18 @@ def START(*args, **kwargs):
 
 @route_like(START)
 def ANSWERING(message, answer_id=None, host=None):
+    
+    user = talking.get_user(message)
+    answer = talking.get_answer(answer_id)
+    snip = answer.snip
+    if snip.ready_to_moderate():
+        modwork = talking.create_mod_email(snip)
+        q = queue.Queue("run/work")
+        q.push(msg)
+
+    if user.enough_karma():
+        user.use_karma()
+        talking.continue_conversation(user)
 
     # if answer
     # add answer to the conversation

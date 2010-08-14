@@ -86,6 +86,7 @@ def get_answer_message(answer):
 
     return message
 
+
 def build_answer_message_body(answer):
     
     snips = [snip for snip in answer.snip.conversation.snip_set.order_by('sequence').all()][:-1]
@@ -95,5 +96,4 @@ def build_answer_message_body(answer):
         body += DELIMITER + '\n\nYou: ' + snip.prompt + '\n\n'
         body += DELIMITER + '\n\nMr. Quibbles: ' + snip.get_response() + '\n\n'
     body += DELIMITER + '\n\nYou: ' + answer.snip.prompt + '\n\n'
-    print body
     return body
