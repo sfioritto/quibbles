@@ -225,13 +225,12 @@ def create_mod(snip, message):
 
 
 def continue_conversation(user, conv):
-    pass
-#     user.use_karma()
-#     conv.pendingprompt = True
-#     conv.save()
-#     message = MailResponse(From="conv-%s@mr.quibbl.es" % conv.id, Subject=conv.subject, Body=build_conversation_body(answer))
-#     message['To'] = user.email
-#     relay.deliver(message, To=message['To'], From=message['From'])
+    user.use_karma()
+    conv.pendingprompt = True
+    conv.save()
+    message = MailResponse(From="conv-%s@mr.quibbl.es" % conv.id, Subject=conv.subject, Body=build_conversation_body(answer))
+    message['To'] = user.email
+    relay.deliver(message, To=message['To'], From=message['From'])
 
 
 
