@@ -1,5 +1,6 @@
 import logging
 from lamson.routing import route, route_like, stateless
+from lamson import queue
 from config.settings import relay
 from lamson import view
 from app.model import talking
@@ -8,16 +9,17 @@ from app.model import talking
 @stateless
 @route("talk@(host)")
 def TALK(message, host=None):
+
     user = talking.get_user(message)
     conv = talking.create_conversation(user)
     snip = talking.get_snip(message, conv)
     messages = talking.get_answer_messages(snip)
     for msg in messages:
-        #dump into work queue
-        pass
+        q = queue.Queue("run/work")
+        q.push(msg)
 
     for work in talking.get_work():
-        talking.send(work)
+        talking.send(work, user)
 
 
 @route("answer_(answer_id)@(host)",
