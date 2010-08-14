@@ -144,30 +144,31 @@ def get_answer_message(answer):
     return message
 
 def create_mod_request_email(snip):
-    message = MailResponse(From="mod-%s@mr.quibbl.es" % snip.id, Subject="Mr. Quibbles wants you your input...", Body=build_mod_message_body(snip))
+    message = MailResponse(From="mod-%s@mr.quibbl.es" % snip.id, Subject="Mr. Quibbles wants you your input...", Body=build_mod_request_message_body(snip))
     
 
-def build_mod_request_message_body(snip):
+def build_mod_request_message_body(last_snip):
 
-    snips = [snip for snip in last_snip.conversation.snip_set.order_by('sequence').all()]
-    
     body = DELIMITER + """
-        Mr. Quibbles: I heard this on the grapevine:
-            \"""" + snips[-1].prompt + """
-            How would you respond?
+        Mr. Quibbles: I heard this through the grapevine -
             
-            """
-    answers = snip.answer_set.all()
+            \"""" + last_snip.prompt + """\"
+            
+        Copy and paste the best response, or write your own.
+        
+        """
+    answers = last_snip.answer_set.all()
     
-    body += """
-                """ + answers[0].text + """
+    body += """    """ + answers[0].text + """
                 
                 or
                 
-                """ + answers[1].text + '\n\n'
+            """ + answers[1].text + '\n\n'
     
-    body += ''
-    #In progress
+    moderated_snips = [snip for snip in last_snip.conversation.snip_set.order_by('sequence').all()][:-1]
+    body += build_unmoderated_message_previous_conversation(last_snip, moderated_snips)
+    
+    return body
 
 def create_mod_email(snip):
 

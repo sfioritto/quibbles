@@ -125,6 +125,36 @@ def test_create_mod_message():
     assert mod_message.Body.split(DELIMITER)[-1] == '\n\nMr. Quibbles: Skynet is people.\n\n'
 
 @with_setup(setup_func, teardown_func)
+def test_build_unmoderated_request_message_body():
+    u = User()
+    u.save()
+    
+    c = Conversation(user=u)
+    c.save()
+    
+    s1 = Snip(conversation=c,prompt='Hello Mr. Quibbles',sequence=0)
+    s1.save()
+    
+    a1 = Answer(snip=s1,text='Hello User.')
+    a1.save()
+    
+    m1 = Moderated(snip=s1,text='moderated Hello User.')
+    m1.save()
+    
+    s2 = Snip(conversation=c,prompt='Are you people?',sequence=1)
+    s2.save()
+    
+    a2 = Answer(snip=s2,text='Skynet is people.')
+    a2.save()
+    a3 = Answer(snip=s2,text='I am Skynet.')
+    a3.save()
+    
+    print build_mod_request_message_body(s2)
+    moderation_request_message = build_mod_request_message_body(s2)
+    assert len(moderation_request_message.split(DELIMITER)) == 6, "NOT ENOUGH DELIMITERS!"
+    assert moderation_request_message.split(DELIMITER)[-1] == "\n\nYou: Are you people?\n\n"
+
+@with_setup(setup_func, teardown_func)
 def test_get_answer_message():
     u = User()
     u.save()
