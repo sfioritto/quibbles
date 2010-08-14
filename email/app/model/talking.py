@@ -53,11 +53,11 @@ def create_snip(message, conv):
     text = scrape_response(message)
     snip = Snip(prompt=text, 
                 conversation=conv,
-                sequence=_get_snip_sequence(conv))
+                sequence=get_snip_sequence(conv))
     snip.save()
     return snip
 
-def _get_snip_sequence(conv):
+def get_snip_sequence(conv):
     last_snip = conv.get_last_snip()
     
     if last_snip == None:

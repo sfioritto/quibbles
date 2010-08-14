@@ -81,6 +81,22 @@ def test_create_snip():
     assert len(conv.snip_set.all()) == 1
 
 @with_setup(setup_func, teardown_func)
+def test_get_snip_sequence():
+    body = 'test' + DELIMITER + 'test2'
+    msg = MailResponse(To="talk@mr.quibbl.es", From="test@localhost", Subject="Mr. Quibbles wants to your input", Body=body)
+    u = User(email="test@localhost")
+    u.save()
+    
+    conv = Conversation(user=u)
+    conv.save()
+    
+    assert get_snip_sequence(conv) == 0
+    
+    snip = create_snip(msg, conv)
+    
+    assert get_snip_sequence(conv) == 1
+
+@with_setup(setup_func, teardown_func)
 def test_get_answer_message():
     u = User()
     u.save()
