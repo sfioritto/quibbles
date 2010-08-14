@@ -55,6 +55,32 @@ def test_create_conv():
     assert len(u.conversation_set.all()) == 1, "Incorrect number of conversations: " + str(len(u.conversation_set.all()))
 
 @with_setup(setup_func, teardown_func)
+def test_scrape_response():
+    body = 'test' + DELIMITER + 'test2'
+    msg = MailResponse(To="talk@mr.quibbl.es", From="test@localhost", Subject="Mr. Quibbles wants to your input", Body=body)
+    
+    assert scrape_response(msg) == 'test'
+    
+    body = ''
+    msg = MailResponse(To="talk@mr.quibbl.es", From="test@localhost", Subject="Mr. Quibbles wants to your input", Body=body)
+    
+    assert scrape_response(msg) == ''
+
+@with_setup(setup_func, teardown_func)
+def test_create_snip():
+    body = 'test' + DELIMITER + 'test2'
+    msg = MailResponse(To="talk@mr.quibbl.es", From="test@localhost", Subject="Mr. Quibbles wants to your input", Body=body)
+    u = User(email="test@localhost")
+    u.save()
+    
+    conv = Conversation(user=u)
+    conv.save()
+    
+    snip = create_snip(msg, conv)
+    
+    assert len(conv.snip_set.all()) == 1
+
+@with_setup(setup_func, teardown_func)
 def test_get_answer_message():
     u = User()
     u.save()

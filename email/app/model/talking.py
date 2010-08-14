@@ -41,7 +41,7 @@ def scrape_response(message):
     """
     Grab a chunk of text from the top of the message.
     """
-    chunks = message.body().split(DELIMITER)
+    chunks = message.Body.split(DELIMITER)
     if chunks:
         text = chunks[0]
     else:
