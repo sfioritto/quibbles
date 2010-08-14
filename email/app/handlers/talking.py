@@ -1,19 +1,17 @@
-import logging
 from lamson.routing import route, route_like, stateless
 from lamson import queue
-from config.settings import relay
-from lamson import view
 from app.model import talking
 
 
-@stateless
 @route("talk@(host)")
+@stateless
 def TALK(message, host=None):
 
     user = talking.get_user(message)
     conv = talking.create_conversation(user)
     snip = talking.get_snip(message, conv)
     messages = talking.get_answer_messages(snip)
+
     for msg in messages:
         q = queue.Queue("run/work")
         q.push(msg)
@@ -22,14 +20,13 @@ def TALK(message, host=None):
         talking.send(work, user)
 
 
-@route("answer_(answer_id)@(host)",
-       "mod_(mod_id)@(host)")
+@route("answer_(answer_id)@(host)")
 def START(*args, **kwargs):
     return ANSWERING(*args, **kwargs)
 
 
 @route_like(START)
-def ANSWERING(message, answer_id=None, mod_id, host=None):
+def ANSWERING(message, answer_id=None, host=None):
 
     # if answer
     # add answer to the conversation
@@ -44,5 +41,6 @@ def ANSWERING(message, answer_id=None, mod_id, host=None):
     # add moderate response to conversation
     # generate response email
     # send it out
+    pass
 
 
