@@ -17,5 +17,5 @@ logs/
 run/
 email/run/
 email/logs/
-webapp/settings/
+webapp/settings.py
 
