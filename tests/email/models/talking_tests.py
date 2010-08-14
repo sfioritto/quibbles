@@ -97,6 +97,34 @@ def test_get_snip_sequence():
     assert get_snip_sequence(conv) == 1
 
 @with_setup(setup_func, teardown_func)
+def test_create_mod_message():
+    u = User()
+    u.save()
+    
+    c = Conversation(user=u)
+    c.save()
+    
+    s1 = Snip(conversation=c,prompt='Hello Mr. Quibbles',sequence=0)
+    s1.save()
+    
+    a1 = Answer(snip=s1,text='Hello User.')
+    a1.save()
+    
+    m1 = Moderated(snip=s1,text='moderated Hello User.')
+    m1.save()
+    
+    s2 = Snip(conversation=c,prompt='Are you people?',sequence=1)
+    s2.save()
+    
+    a2 = Answer(snip=s2,text='Skynet is people.')
+    a2.save()
+
+    print create_mod_email(s2).Body
+    mod_message = create_mod_email(s2)
+    assert len(mod_message.Body.split(DELIMITER)) == 6, "NOT ENOUGH DELIMITERS!"
+    assert mod_message.Body.split(DELIMITER)[-1] == '\n\nMr. Quibbles: Skynet is people.\n\n'
+
+@with_setup(setup_func, teardown_func)
 def test_get_answer_message():
     u = User()
     u.save()
@@ -120,4 +148,6 @@ def test_get_answer_message():
     a2.save()
 
     print get_answer_message(a2).Body
-    assert len(get_answer_message(a2).Body.split(DELIMITER)) == 5, "NOT ENOUGH DELIMITERS!"
+    answer_message = get_answer_message(a2)
+    assert len(answer_message.Body.split(DELIMITER)) == 5, "NOT ENOUGH DELIMITERS!"
+    assert answer_message.Body.split(DELIMITER)[-1] == "\n\nYou: Are you people?\n\n"
