@@ -6,19 +6,17 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'webapp.settings'
 # You may add additional parameters such as `username' and `password' if your
 # relay server requires authentication, `starttls' (boolean) or `ssl' (boolean)
 # for secure connections.
-relay_config = {'host': 'localhost', 'port': 8825}
+relay_config = {'host': 'localhost', 'port': 1025}
 
 receiver_config = {'host': '0.0.0.0', 'port': 25}
 
-alertsq_config = {'queue' : 'run/alerts', 'sleep' : 10}
+handlers = ['app.handlers.talking']
 
-handlers = ['app.handlers.alerts']
-
-alertsq_handlers = ['app.handlers.alertsq']
 
 router_defaults = {
-    'host': 'lookoutthere\\.com',
-    'alert_id': '[0-9]+',
+    'host': 'mr\\.quibbl\\.es',
+    'answer_id' : '[0-9]+',
+    'snip_id': '[0-9]+',
 }
 
 template_config = {'dir': 'app', 'module': 'templates'}

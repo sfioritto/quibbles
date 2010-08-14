@@ -5,10 +5,10 @@ TEMPLATE_DEBUG = DEBUG
 
 EMAIL_PORT = 1025
 EMAIL_USE_TLS = False
-EMAIL_HOST_PASSWORD = "C3rb3russ"
+EMAIL_HOST_PASSWORD = "pugblairisraelbundyiboxen"
 EMAIL_HOST_USER = "sean"
-DEFAULT_FROM_EMAIL = "no-reply@lookoutthere.com"
-SERVER_EMAIL = "no-reply@lookoutthere.com"
+DEFAULT_FROM_EMAIL = "no-reply@mr.quibbl.es"
+SERVER_EMAIL = "no-reply@mr.quibbl.es"
 
 ADMINS = (
     # ('Sean Fioritto', 'sean@twosix.es'),
@@ -18,7 +18,7 @@ MANAGERS = ADMINS
 
 
 DATABASE_ENGINE = 'postgresql_psycopg2'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = 'lookout'             # Or path to database file if using sqlite3.
+DATABASE_NAME = 'quibbles'             # Or path to database file if using sqlite3.
 DATABASE_USER = 'postgres'             # Not used with sqlite3.
 DATABASE_PASSWORD = 'C3rb3russ'         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
@@ -75,7 +75,7 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'webapp.urls'
 
 TEMPLATE_DIRS = (
-    '/var/lookout/www/webapp/templates',
+    '/var/quibbles/www/webapp/templates',
 )
 
 INSTALLED_APPS = (
@@ -83,18 +83,7 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
-    'django.contrib.admin',
-    'webapp.alerts',
-    'webapp.account',
-    'webapp.clients',
-    'webapp.feed',
-    'webapp.blurb',
+    'webapp.talking',
 )
 
-
-AUTHENTICATION_BACKENDS = ('webapp.backends.EmailBackend',
-                           'django.contrib.auth.backends.ModelBackend',)
-LOGIN_URL = '/account/login'
-LOGIN_REDIRECT_URL = '/clients'
-AUTH_PROFILE_MODULE = 'account.Account'
 
