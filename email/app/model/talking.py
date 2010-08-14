@@ -143,6 +143,13 @@ def get_answer_message(answer):
 
     return message
 
+def create_mod_request_email(snip):
+    message = MailResponse(From="mod-%s@mr.quibbl.es" % snip.id, Subject="Mr. Quibbles wants you your input...", Body=build_mod_message_body(snip))
+    
+
+def build_mod_request_message_body(snip):
+    pass
+
 def create_mod_email(snip):
 
     message = MailResponse(From="mod-%s@mr.quibbl.es" % snip.id, Subject="Mr. Quibbles wants you to know...", Body=build_mod_message_body(snip))
@@ -153,12 +160,19 @@ def build_mod_message_body(last_snip):
     
     snips = [snip for snip in last_snip.conversation.snip_set.order_by('sequence').all()]
     
-    body = DELIMITER + '\n\nThe conversation so far...\n'
-    for snip in snips:
-        body += DELIMITER + '\n\nYou: ' + snip.prompt + '\n\n'
-        body += DELIMITER + '\n\nMr. Quibbles: ' + snip.get_response() + '\n\n'
+    body = DELIMITER + '\n\nMr. Quibbles: ' + snips[-1].get_response() + '\n\n'
+    body += build_mod_message_previous_conversation(snips)
     
     return body
+
+def build_mod_message_previous_conversation(snips):
+    previous_conversation = DELIMITER + '\n\nThe conversation so far...\n'
+    
+    for snip in snips:
+        previous_conversation += DELIMITER + '\n\nYou: ' + snip.prompt + '\n\n'
+        previous_conversation += DELIMITER + '\n\nMr. Quibbles: ' + snip.get_response() + '\n\n'
+    
+    return previous_conversation
 
 def build_answer_message_body(answer):
     
@@ -169,8 +183,8 @@ def build_answer_message_body(answer):
         body += DELIMITER + '\n\nYou: ' + snip.prompt + '\n\n'
         body += DELIMITER + '\n\nMr. Quibbles: ' + snip.get_response() + '\n\n'
     body += DELIMITER + '\n\nYou: ' + answer.snip.prompt + '\n\n'
+    
     return body
-
 
 def get_snip(id):
     return Snip.objects.get(pk=id)

@@ -121,7 +121,7 @@ def test_create_mod_message():
 
     print create_mod_email(s2).Body
     mod_message = create_mod_email(s2)
-    assert len(mod_message.Body.split(DELIMITER)) == 6, "NOT ENOUGH DELIMITERS!"
+    assert len(mod_message.Body.split(DELIMITER)) == 7, "NOT ENOUGH DELIMITERS!"
     assert mod_message.Body.split(DELIMITER)[-1] == '\n\nMr. Quibbles: Skynet is people.\n\n'
 
 @with_setup(setup_func, teardown_func)
