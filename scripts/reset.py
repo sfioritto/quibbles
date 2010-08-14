@@ -1,4 +1,4 @@
-#!/Users/seanfioritto/lookout/env/LOOKOUT/bin/python
+#!/Users/seanfioritto/quibbles/env/QUIBBLES/bin/python
 
 from conf import home
 from webapp import settings
@@ -18,10 +18,10 @@ def main():
     
     #add cascade to each line
     dropall = open("/tmp/dropall.sql").read()
-    open("/tmp/dropall.sql", "w").write("\n".join([x[:-1] + "CASCADE;" for x in dropall.strip("\n").split("\n")]))
+    open("/tmp/dropall.sql", "w").write("\n".join([x[:-1] + " CASCADE;" for x in dropall.strip("\n").split("\n")]))
              
     # execute the newly created script
-    os.system("psql -U postgres -d lookout -f /tmp/dropall.sql")
+    os.system("psql -U postgres -d quibbles -f /tmp/dropall.sql")
 
     # regenerate the tables
     os.system("python manage.py syncdb")
