@@ -218,7 +218,7 @@ def build_answer_message_body(answer):
             
             \"""" + answer.snip.prompt + """\"
             
-        What's your response?\n\n"""
+        Hit reply and continue this conversation.\n\n"""
     
     snips = [snip for snip in answer.snip.conversation.snip_set.order_by('sequence').all()]
     
