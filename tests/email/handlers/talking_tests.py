@@ -64,7 +64,7 @@ def test_get_work():
     
     Router.deliver(msg)
     q = queue.Queue(email('run/work'))
-    assert q.count() == 2, "Queue count is actually %s" % str(q.count())
+    assert q.count() == 3, "Queue count is actually %s" % str(q.count())
     assert len(Answer.objects.all()) == 4, "Oops. There are actually %s answers in the db, expected 4." % str(len(Answer.objects.all()))
 
 

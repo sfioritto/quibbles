@@ -92,7 +92,8 @@ def get_work(user):
     q = queue.Queue("run/work")
     invalid = []
     work = []
-
+    conversations = []
+    
     while q.count() > 0:
         key, msg = q.pop()
         
@@ -102,8 +103,11 @@ def get_work(user):
             pass
         elif snip.conversation.user == user:
             invalid.append(msg)
+        elif  snip.conversation in conversations:
+            invalid.append(msg)
         else:
             work.append(msg)
+            conversations.append(snip.conversation)
 
         if len(work) == 2:
             break
