@@ -86,9 +86,7 @@ def test_add_karma():
     
     ans_u = User.objects.filter(email='new@sender.com')[0]
     
-    print ans_u.karma
-    
-    assert ans_u.karma == 2
+    assert ans_u.karma == 0
 
 
 @with_setup(setup_func, teardown_func)

@@ -14,8 +14,7 @@ def create_work(message, conv):
 def send_work(user):
     
     work_messages = talking.get_work(user) 
-    print 'work count'
-    print len(work_messages)
+
     user.add_karma(len(work_messages))
     
     for work in work_messages:
