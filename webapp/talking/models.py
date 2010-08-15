@@ -50,7 +50,7 @@ class Snip(models.Model):
 
     def ready_to_moderate(self):
         answers = self.answer_set.all()
-        return len([a for a in answers if a.text])
+        return len([a for a in answers if a.text]) == 2
     
     def get_response(self):
         moderated_answers = self.moderated_set.all()
