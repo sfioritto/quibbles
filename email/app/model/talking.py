@@ -156,24 +156,24 @@ PS - Don't reply to this e-mail."""
 
 def get_answer_message(answer):
     
-    message = MailResponse(From='"Mr. Quibbles" <answer-%s@mr.quibbl.es>' % answer.id, Subject="Mr. Quibbles wants your input", Body=build_answer_message_body(answer))
+    message = MailResponse(From='"Mr. Quibbles" <answer-%s@mr.quibbl.es>' % answer.id, Subject="Pretend You're Mr. Quibbles", Body=build_answer_message_body(answer))
 
     return message
     
 
 def build_mod_request_message_body(last_snip):
 
-    body = DELIMITER + "\n\nRead to the end of this e-mail.  Hit reply and copy and paste the best of the two responses to this conversation."
+    body = DELIMITER + "\n\nMr. Quibbles has two options to respond to this converstation.  Read to the end of this e-mail and pick the best one."
     snips = [snip for snip in last_snip.conversation.snip_set.order_by('sequence').all()]
     body += build_complete_conversation(snips)
     answers = last_snip.answer_set.all()
-    body += "Option 1: " + answers[0].text + "\nor\nOption 2: " + answers[1].text
+    body += "\n\nOption 1: " + answers[0].text + "\nor\n\nOption 2: " + answers[1].text
         
     return body
 
 def create_mod_email(snip):
 
-    message = MailResponse(From='"Mr. Quibbles" <mod-%s@mr.quibbl.es>' % snip.id, Subject="Mr. Quibbles wants you to know.", Body=build_mod_request_message_body(snip))
+    message = MailResponse(From='"Mr. Quibbles" <mod-%s@mr.quibbl.es>' % snip.id, Subject="Pretend You're Mr. Quibbles", Body=build_mod_request_message_body(snip))
     snip.complete = True
     
     return message
