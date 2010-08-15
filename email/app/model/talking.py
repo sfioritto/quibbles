@@ -144,7 +144,7 @@ def send(work, user):
 
 def send_welcome_message(user):
     body = """Hi There!
-I'm Mr. Quibbles.  Thanks for helping with this demo.  You will receive two emails.  We need your help, so please respond to both of them!  Thanks again!
+I'm Mr. Quibbles.  Thanks for helping with this demo.  You're going to start receving a lot of e-mails.  We need your help, so please respond to as many as you can!  Thanks again!
 
 The Quibbler (My extremely awesome nickname.)
 
@@ -216,16 +216,12 @@ def build_complete_conversation(snips):
 
 def build_answer_message_body(answer):
     
-    body = DELIMITER + """\n\n
-        Mr. Quibbles: I heard this through the grapevine -
-            
-            \"""" + answer.snip.prompt + """\"
-            
-        Hit reply and continue this conversation.\n\n"""
+    body = DELIMITER + "\n\nRead to the end of this e-mail, hit reply, and continue this conversation.\n\n"
     
     snips = [snip for snip in answer.snip.conversation.snip_set.order_by('sequence').all()]
     
     body += build_complete_conversation(snips)
+    body += answer.snip.prompt
     
     return body
 
