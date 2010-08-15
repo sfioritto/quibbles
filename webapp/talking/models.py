@@ -19,7 +19,6 @@ class User(models.Model):
         self.save()
 
     def use_karma(self):
-        assert self.karma <= 2, "Not enough karma to use."
         self.karma = self.karma - 2
         self.save()
 
