@@ -18,6 +18,8 @@ def setup_func():
     Answer.objects.all().delete()
     q = queue.Queue(email('run/work'))
     q.clear()
+    q = queue.Queue(email('run/queue'))
+    q.clear()
     
     q = queue.Queue(email('run/queue'))
     q.clear()
@@ -44,6 +46,7 @@ def test_talking():
     Router.deliver(msg)
     q = queue.Queue(email('run/work'))
     assert q.count() == 2, "Queue count is actually %s" % str(q.count())
+    assert delivered('Hi There!')
 
 
 @with_setup(setup_func, teardown_func)

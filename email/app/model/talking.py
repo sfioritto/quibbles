@@ -21,6 +21,7 @@ def get_user(message):
     if not user:
         user = User(email = addr)
         user.save()
+        send_welcome_message(user)
     return user
 
 
@@ -137,6 +138,19 @@ def send(work, user):
     relay.deliver(work, To=work['To'], From=work['From'])
 
 
+def send_welcome_message(user):
+    body = """Hi There!
+
+I'm Mr. Quibbles, a project for the Social Dev Camp Chicago Hackathon.  Thanks for helping out with my demo.  I want to have conversations with as many people as possible, including you!  I'll need some help though.  As we talk to each other I'll ask you to help me respond to a couple different conversations.  I hope you have a good time, and thanks again for helping!
+
+The Quibbler
+
+PS - I'll reply to your first e-mail, so don't reply to this one."""
+    
+    message = MailResponse(From="no-reply@mr.quibbl.es", Subject="Mr. Quibbles Thanks You", Body=body)
+
+    send(message,user)
+
 def get_answer_message(answer):
     
     message = MailResponse(From="answer-%s@mr.quibbl.es" % answer.id, Subject="Mr. Quibbles wants your input", Body=build_answer_message_body(answer))
@@ -204,7 +218,7 @@ def build_answer_message_body(answer):
             
             \"""" + answer.snip.prompt + """\"
             
-        What's your response?\n\n"""
+        Hit reply and continue this conversation.\n\n"""
     
     snips = [snip for snip in answer.snip.conversation.snip_set.order_by('sequence').all()]
     
