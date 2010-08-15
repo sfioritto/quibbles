@@ -156,7 +156,7 @@ PS - Don't reply to this e-mail."""
 
 def get_answer_message(answer):
     
-    message = MailResponse(From='"Mr. Quibbles" <answer-%s@mr.quibbl.es>' % answer.id, Subject="Pretend You're Mr. Quibbles", Body=build_answer_message_body(answer))
+    message = MailResponse(From='"Mr. Quibbles" <answer-%s@mr.quibbl.es>' % answer.id, Subject="Pretend You're Mr. Quibbles - Choose the best option", Body=build_answer_message_body(answer))
 
     return message
     
@@ -173,7 +173,7 @@ def build_mod_request_message_body(last_snip):
 
 def create_mod_email(snip):
 
-    message = MailResponse(From='"Mr. Quibbles" <mod-%s@mr.quibbl.es>' % snip.id, Subject="Pretend You're Mr. Quibbles", Body=build_mod_request_message_body(snip))
+    message = MailResponse(From='"Mr. Quibbles" <mod-%s@mr.quibbl.es>' % snip.id, Subject="Pretend You're Mr. Quibbles - Respond to the conversation", Body=build_mod_request_message_body(snip))
     snip.complete = True
     
     return message
@@ -191,7 +191,7 @@ def build_response_message_body(last_snip):
 def build_complete_conversation(snips):
     """assumes snips are ordered from earliest to latest"""
     
-    complete_conversation = DELIMITER + '\n\nThe conversation so far...\n'
+    complete_conversation = ''
     
     for snip in snips:
         if snip.complete:
