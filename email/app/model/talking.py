@@ -196,10 +196,10 @@ def build_complete_conversation(snips):
     
     for snip in snips:
         if snip.complete:
-            complete_conversation += '\nYou: ' + snip.prompt + '\n'
+            complete_conversation += '\nSomeone Said: ' + snip.prompt + '\n'
             complete_conversation += 'Mr. Quibbles: ' + snip.get_response()
         else:
-            complete_conversation += '\nYou: ' + snip.prompt
+            complete_conversation += '\nSomeone Said: ' + snip.prompt
             
     return clean(complete_conversation)
 
