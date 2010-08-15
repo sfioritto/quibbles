@@ -144,14 +144,13 @@ def send(work, user):
 
 def send_welcome_message(user):
     body = """Hi There!
+I'm Mr. Quibbles.  Thanks for helping with this demo.  You will receive two emails.  We need your help, so please respond to both of them!  Thanks again!
 
-I'm Mr. Quibbles, a project for the Social Dev Camp Chicago Hackathon.  Thanks for helping out with my demo.  I want to have conversations with as many people as possible, including you!  I'll need some help though.  As we talk to each other I'll ask you to help me respond to a couple different conversations.  I hope you have a good time, and thanks again for helping!
+The Quibbler (My extremely awesome nicmname.)
 
-The Quibbler
-
-PS - I'll reply to your first e-mail, so don't reply to this one."""
+PS - Don't reply to this e-mail."""
     
-    message = MailResponse(From='"Mr. Quibbles" <no-reply@mr.quibbl.es>', Subject="Mr. Quibbles Thanks You", Body=body)
+    message = MailResponse(From='"Mr. Quibbles" <no-reply@mr.quibbl.es>', Subject="Read this right now.", Body=body)
 
     send(message,user)
 
