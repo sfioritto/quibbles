@@ -163,7 +163,7 @@ def build_mod_request_message_body(last_snip):
             """ + answers[1].text + '\n\n'
     
     snips = [snip for snip in last_snip.conversation.snip_set.order_by('sequence').all()]
-    body += build_complete_conversation(last_snip, moderated_snips)
+    body += build_complete_conversation(snips)
     
     return body
 
@@ -192,8 +192,8 @@ def build_complete_conversation(snips):
     
     for snip in snips:
         if snip.complete:
-            previous_conversation += DELIMITER + '\n\nYou: ' + snip.prompt + '\n\n'
-            previous_conversation += DELIMITER + '\n\nMr. Quibbles: ' + snip.get_response() + '\n\n'
+            complete_conversation += DELIMITER + '\n\nYou: ' + snip.prompt + '\n\n'
+            complete_conversation += DELIMITER + '\n\nMr. Quibbles: ' + snip.get_response() + '\n\n'
             
     return complete_conversation
 
@@ -202,7 +202,7 @@ def build_answer_message_body(answer):
     body = DELIMITER + """\n\n
         Mr. Quibbles: I heard this through the grapevine -
             
-            \"""" + last_snip.prompt + """\"
+            \"""" + answer.snip.prompt + """\"
             
         What's your response?\n\n"""
     
