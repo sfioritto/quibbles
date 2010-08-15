@@ -184,7 +184,6 @@ def build_response_message_body(last_snip):
     
     snips = [snip for snip in last_snip.conversation.snip_set.order_by('sequence').all()]
     
-    body = DELIMITER + '\n\nMr. Quibbles: ' + snips[-1].get_response() + '\n\n'
     body += build_complete_conversation(snips)
     
     return clean(body)
