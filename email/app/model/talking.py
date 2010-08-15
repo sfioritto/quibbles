@@ -121,7 +121,7 @@ def get_snip_frm_msg(msg):
     answer_id = re.compile('answer-(%s)@(%s)' % (settings.router_defaults['answer_id'], settings.router_defaults['host']))
     snip_id = re.compile('mod-(%s)@(%s)' % (settings.router_defaults['snip_id'], settings.router_defaults['host']))
     
-    frm = msg['From']
+    frm = parseaddr(msg['From'])[1]
 
     snip = None
     # we can use the id to lookup an answer
@@ -151,13 +151,13 @@ The Quibbler
 
 PS - I'll reply to your first e-mail, so don't reply to this one."""
     
-    message = MailResponse(From="no-reply@mr.quibbl.es", Subject="Mr. Quibbles Thanks You", Body=body)
+    message = MailResponse(From='"Mr. Quibbles" <no-reply@mr.quibbl.es>', Subject="Mr. Quibbles Thanks You", Body=body)
 
     send(message,user)
 
 def get_answer_message(answer):
     
-    message = MailResponse(From="answer-%s@mr.quibbl.es" % answer.id, Subject="Mr. Quibbles wants your input", Body=build_answer_message_body(answer))
+    message = MailResponse(From='"Mr. Quibbles" <answer-%s@mr.quibbl.es>' % answer.id, Subject="Mr. Quibbles wants your input", Body=build_answer_message_body(answer))
 
     return message
     
@@ -187,7 +187,7 @@ def build_mod_request_message_body(last_snip):
 
 def create_mod_email(snip):
 
-    message = MailResponse(From="mod-%s@mr.quibbl.es" % snip.id, Subject="Mr. Quibbles wants you to know.", Body=build_mod_request_message_body(snip))
+    message = MailResponse(From='"Mr. Quibbles" <mod-%s@mr.quibbl.es>' % snip.id, Subject="Mr. Quibbles wants you to know.", Body=build_mod_request_message_body(snip))
     snip.complete = True
     
     return message
@@ -248,7 +248,7 @@ def continue_conversation(user):
     if conv:
         conv.pendingprompt = True
         conv.save()
-        message = MailResponse(From="conv-%s@mr.quibbl.es" % conv.id, Subject=conv.subject, Body=build_response_message_body(conv.get_last_snip()))
+        message = MailResponse(From='"Mr. Quibbles" <conv-%s@mr.quibbl.es>' % conv.id, Subject=conv.subject, Body=build_response_message_body(conv.get_last_snip()))
         message['To'] = user.email
         relay.deliver(message, To=message['To'], From=message['From'])
 

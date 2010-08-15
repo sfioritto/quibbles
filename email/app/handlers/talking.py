@@ -28,6 +28,7 @@ def TALK(message, host=None):
     conv = talking.create_conversation(user)
     conv.subject = "Re: " + message['Subject']
     conv.save()
+    #import pdb;pdb.set_trace()
     create_work(message, conv)
     send_work(user)
 
