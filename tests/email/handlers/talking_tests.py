@@ -101,8 +101,9 @@ def test_continue_conversation():
     assert len(User.objects.all()) == 1
     u = User.objects.all()[0]
     c = Conversation.objects.all()[0]
-    talking.continue_conversation(u, c)
+    talking.continue_conversation(u)
     assert delivered('Hmmm...')
+    c = Conversation.objects.all()[0]
     assert c.pendingprompt == True
     to = "conv-%s@mr.quibbl.es" % str(c.id)
     msg = MailRequest('fakepeer', sender, to, open(home("tests/data/emails/question.msg")).read())
