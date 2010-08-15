@@ -58,7 +58,7 @@ class Snip(models.Model):
         if len(moderated_answers) == 0:
             answers = self.answer_set.all()
             
-            if len(answers) == 0:
+            if len([a for a in answers if a.text]) == 0:
                 return "Hmmm... I'm not sure I know enough to say anything meaningful here."
             else:
                 return answers[0].text

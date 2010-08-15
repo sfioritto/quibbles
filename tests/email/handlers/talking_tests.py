@@ -5,7 +5,7 @@ from lamson.routing import Router
 from lamson.mail import MailRequest
 from lamson import queue
 from conf import *
-from webapp.talking.models import Answer, User, Conversation, Snip
+from webapp.talking.models import *
 from app.model import talking
 
 
@@ -19,10 +19,14 @@ def setup_func():
     q = queue.Queue(email('run/work'))
     q.clear()
     
+    q = queue.Queue(email('run/queue'))
+    q.clear()
+
     User.objects.all().delete()
     Conversation.objects.all().delete()
     Answer.objects.all().delete()
     Snip.objects.all().delete()
+    Router.STATE_STORE.clear()
 
 def teardown_func():
     pass
@@ -41,6 +45,7 @@ def test_talking():
     q = queue.Queue(email('run/work'))
     assert q.count() == 2, "Queue count is actually %s" % str(q.count())
 
+
 @with_setup(setup_func, teardown_func)
 def test_get_work():
 
@@ -58,6 +63,7 @@ def test_get_work():
     q = queue.Queue(email('run/work'))
     assert q.count() == 2, "Queue count is actually %s" % str(q.count())
     assert len(Answer.objects.all()) == 4, "Oops. There are actually %s answers in the db, expected 4." % str(len(Answer.objects.all()))
+
 
 @with_setup(setup_func, teardown_func)
 def test_add_karma():
@@ -78,3 +84,29 @@ def test_add_karma():
     ans_u = User.objects.filter(email='new@sender.com')[0]
     
     assert ans_u.karma == 1
+
+
+@with_setup(setup_func, teardown_func)
+def test_continue_conversation():
+
+    """
+    Start a conversation, get a response, continue the conversation.
+    """
+
+    test_talking()
+    assert len(Conversation.objects.all()) == 1
+    assert len(User.objects.all()) == 1
+    u = User.objects.all()[0]
+    c = Conversation.objects.all()[0]
+    talking.continue_conversation(u, c)
+    assert delivered('Hmmm...')
+    assert c.pendingprompt == True
+    to = "conv-%s@mr.quibbl.es" % str(c.id)
+    msg = MailRequest('fakepeer', sender, to, open(home("tests/data/emails/question.msg")).read())
+    msg['to'] = to
+    msg['from'] = sender
+    #TODO: this doesn't affect state for some reason.
+    Router.deliver(msg)
+    assert len(Conversation.objects.all()) == 1
+    assert len(User.objects.all()) == 1
+

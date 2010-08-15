@@ -228,7 +228,7 @@ def continue_conversation(user, conv):
     user.use_karma()
     conv.pendingprompt = True
     conv.save()
-    message = MailResponse(From="conv-%s@mr.quibbl.es" % conv.id, Subject=conv.subject, Body=build_conversation_body(answer))
+    message = MailResponse(From="conv-%s@mr.quibbl.es" % conv.id, Subject=conv.subject, Body=build_response_message_body(conv.get_last_snip()))
     message['To'] = user.email
     relay.deliver(message, To=message['To'], From=message['From'])
 
