@@ -14,7 +14,7 @@ class User(models.Model):
         if work_count == None:
             self.karma += 1
         else:
-            self.karma += 2 - work_count
+            self.karma += (2 - work_count)
         
         self.save()
 
