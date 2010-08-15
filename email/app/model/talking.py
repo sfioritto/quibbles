@@ -169,7 +169,7 @@ def build_mod_request_message_body(last_snip):
     answers = last_snip.answer_set.all()
     body += "\n\nOption 1: " + answers[0].text + "\nor\n\nOption 2: " + answers[1].text
         
-    return body
+    return clean(body)
 
 def create_mod_email(snip):
 
@@ -187,7 +187,7 @@ def build_response_message_body(last_snip):
     body = DELIMITER + '\n\nMr. Quibbles: ' + snips[-1].get_response() + '\n\n'
     body += build_complete_conversation(snips)
     
-    return body
+    return clean(body)
 
 def build_complete_conversation(snips):
     """assumes snips are ordered from earliest to latest"""
@@ -201,7 +201,7 @@ def build_complete_conversation(snips):
         else:
             complete_conversation += '\nYou: ' + snip.prompt
             
-    return complete_conversation
+    return clean(complete_conversation)
 
 def build_answer_message_body(answer):
     
@@ -211,11 +211,23 @@ def build_answer_message_body(answer):
     
     body += build_complete_conversation(snips)
     
-    return body
+    return clean(body)
 
 def get_snip(id):
     return Snip.objects.get(pk=id)
 
+
+def clean(body):
+    lines = body.split('\n')
+    rtn_lines = []
+    
+    for line in lines:
+        if not line.endswith('wrote:'):
+            rtn_lines.append(line)
+    
+    new_body = '\n'.join(rtn_lines)
+    
+    return new_body.replace('>','')
 
 def create_mod(snip, message):
     text = scrape_response(message.body())
