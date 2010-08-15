@@ -50,7 +50,8 @@ class Snip(models.Model):
     complete = models.BooleanField()
 
     def ready_to_moderate(self):
-        return len(self.answer_set.all())
+        answers = self.answer_set.all()
+        return len([a for a in answers if a.text])
     
     def get_response(self):
         moderated_answers = self.moderated_set.all()
