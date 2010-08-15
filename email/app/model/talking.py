@@ -146,7 +146,7 @@ def send_welcome_message(user):
     body = """Hi There!
 I'm Mr. Quibbles.  Thanks for helping with this demo.  You will receive two emails.  We need your help, so please respond to both of them!  Thanks again!
 
-The Quibbler (My extremely awesome nicmname.)
+The Quibbler (My extremely awesome nickname.)
 
 PS - Don't reply to this e-mail."""
     
@@ -209,8 +209,8 @@ def build_complete_conversation(snips):
     
     for snip in snips:
         if snip.complete:
-            complete_conversation += DELIMITER + '\n\nYou: ' + snip.prompt + '\n\n'
-            complete_conversation += DELIMITER + '\n\nMr. Quibbles: ' + snip.get_response() + '\n\n'
+            complete_conversation += '\nYou: ' + snip.prompt + '\n'
+            complete_conversation += 'Mr. Quibbles: ' + snip.get_response()
             
     return complete_conversation
 
