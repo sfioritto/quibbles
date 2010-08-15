@@ -163,25 +163,12 @@ def get_answer_message(answer):
 
 def build_mod_request_message_body(last_snip):
 
-    body = DELIMITER + """
-        Mr. Quibbles: I heard this through the grapevine -
-            
-            \"""" + last_snip.prompt + """\"
-            
-        Copy and paste the best response, or write your own.
-        
-        """
-    answers = last_snip.answer_set.all()
-    
-    body += """    """ + answers[0].text + """
-                
-                or
-                
-            """ + answers[1].text + '\n\n'
-    
+    body = DELIMITER + "\n\nRead to the end of this e-mail.  Hit reply and copy and paste the best of the two responses to this conversation."
     snips = [snip for snip in last_snip.conversation.snip_set.order_by('sequence').all()]
     body += build_complete_conversation(snips)
-    
+    answers = last_snip.answer_set.all()
+    body += "Option 1: " + answers[0].text + "\nor\nOption 2: " + answers[1].text
+        
     return body
 
 def create_mod_email(snip):
@@ -211,6 +198,8 @@ def build_complete_conversation(snips):
         if snip.complete:
             complete_conversation += '\nYou: ' + snip.prompt + '\n'
             complete_conversation += 'Mr. Quibbles: ' + snip.get_response()
+        else:
+            complete_conversation += '\nYou: ' + snip.prompt
             
     return complete_conversation
 
