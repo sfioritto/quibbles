@@ -210,7 +210,6 @@ def build_answer_message_body(answer):
     snips = [snip for snip in answer.snip.conversation.snip_set.order_by('sequence').all()]
     
     body += build_complete_conversation(snips)
-    body += answer.snip.prompt
     
     return body
 
